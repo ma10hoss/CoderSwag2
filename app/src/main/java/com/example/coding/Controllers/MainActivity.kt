@@ -1,5 +1,6 @@
 package com.example.coding.Controllers
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -11,6 +12,7 @@ import com.example.coding.Adapters.CategoryRecyclerAdapter
 import com.example.coding.Models.Category
 import com.example.coding.R
 import com.example.coding.Services.DataServices
+import com.example.coding.Utilities.EXTRA_CATEGORY
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -21,12 +23,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        adapter = CategoryRecyclerAdapter(this, DataServices.categories)
+        //Clicking on a specific category to bring you to a productsActivity page.
+        adapter = CategoryRecyclerAdapter(this, DataServices.categories) {category ->
+            val productsIntent = Intent (this, productsActivity::class.java)
+            //need an extra to link specific category to specific products
+            productsIntent.putExtra(EXTRA_CATEGORY,category.title)
+            startActivity(productsIntent)
+
+        }
         categoryListView.adapter = adapter
 
         val layoutManager = LinearLayoutManager(this)
             categoryListView.layoutManager = layoutManager
             categoryListView.setHasFixedSize(true)
 
-     }
+
+    }
 }
